@@ -1,1 +1,38 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+}
+body,
+html {
+  height: 100%;
+  overflow: auto;
+}
+:root {
+  /** * THEME LIGHT */
+  --main-bg-color-light: rgba(255, 255, 255);
+  /* tabs colors */
+  --tabs-header-bg-color: rgb(231, 234, 236);
+  --tabs-bg-color: var(--tabs-header-bg-color);
+  --tabs-selected-bg-color: var(--main-bg-color-light);
+  --tabs-hover-bg-color: rgb(240, 243, 245);
+  --tabs-text-color: rgb(88, 92, 95);
+  --tabs-hover-text-color: rgb(88, 92, 95);
+  --tabs-selected-text-color: rgb(47, 48, 49);
+  --tabs-height: 2.2rem;
+  /** * THEME DARK */
+  --main-bg-color-dark: rgb(49, 53, 57);
+  /* tabs colors */
+  --dark-tabs-header-bg-color: rgb(31, 32, 35);
+  --dark-tabs-bg-color: var(--main-bg-color-dark);
+  --dark-tabs-selected-bg-color: var(--dark-tabs-header-bg-color);
+  --dark-tabs-hover-bg-color: #25282b;
+  --dark-tabs-text-color: rgb(134, 136, 138);
+  --dark-tabs-hover-text-color: rgb(255, 255, 255);
+  --dark-tabs-selected-text-color: rgb(221, 226, 231);
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

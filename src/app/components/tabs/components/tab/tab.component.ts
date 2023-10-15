@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./tab.component.scss'],
 })
 export class TabComponent {
-  @Input('tabTitle') title!: string;
+  @Input('tabTitle') title: string = 'New Tab';
   @Input() active = false;
   @Input() isCloseable = false;
   @Input() template: any;

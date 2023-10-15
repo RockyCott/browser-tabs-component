@@ -11,13 +11,34 @@ export class AppComponent {
   @ViewChild(TabsFullComponent) tabsFullComponent: TabsFullComponent;
   @ViewChild('newTab') newTabTemplate: any;
 
+  numero = 4;
 
   onNewTab() {
-    this.tabsFullComponent?.newTab('About', this.newTabTemplate, {}, true);
+    this.tabsFullComponent?.newTab(
+      `Tab ${this.numero}`,
+      this.newTabTemplate,
+      //{},
+      this.numero,
+      true
+    );
+    this.numero++;
   }
 
   onCloseTab() {
     // close the tab
     this.tabsFullComponent?.closeActiveTab();
+  }
+
+  onCloseTabSelected(tab: any) {
+    // Puedes mostrar un cuadro de diálogo de confirmación si es necesario.
+    const userConfirmed = confirm('¿Cerrar esta pestaña?');
+
+    if (userConfirmed) {
+      this.tabsFullComponent.closeTab(tab);
+    }
+  }
+
+  tabSelected(event: any) {
+    console.log('tabSelected', event);
   }
 }

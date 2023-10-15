@@ -1,33 +1,15 @@
-<app-tabs-full>
-  <app-tab tabTitle="Foo" [isCloseable]="true"> Content of tab Foo </app-tab>
-  <app-tab tabTitle="Bar"> Content of tab Bar </app-tab>
-  <app-tab tabTitle="google" [isCloseable]="true">
-    Content of tab Google
-  </app-tab>
+<app-tabs-full
+  (tabSelectedEvent)="tabSelected($event)"
+  (closeTabButtonEvent)="onCloseTabSelected($event)"
+  (addTabButtonEvent)="onNewTab()"
+  [isScrollable]="true"
+>
+  <app-tab tabTitle="Tab 1" [isCloseable]="true"> Content of tab 1 </app-tab>
+  <app-tab tabTitle="Tab 2"> Content of tab 2 </app-tab>
+  <app-tab tabTitle="Tab 3" [isCloseable]="true"> Content of tab 3 </app-tab>
 </app-tabs-full>
 
 <button (click)="onNewTab()">new tab</button>
 <button (click)="onCloseTab()">close tab</button>
 
-<ng-template #newTab>
-  <p>
-    Hi, I hope this demo was useful to learn more about dynamic components in
-    Angular, in specific about <code>ViewContainerRef</code>,
-    <code>ComponentResolverFactory</code> etc.
-  </p>
-  <p>
-    Also check out the
-    <a href="https://juristr.com/blog/2017/07/ng2-dynamic-tab-component/"
-      >according blog article</a
-    >. You may also want to read the
-    <a
-      href="https://juristr.com/blog/2016/02/learning-ng2-creating-tab-component/"
-      >article about creating basic tabs with <code>@ContentChildren</code> and
-      <code>@QueryList</code></a
-    >.
-  </p>
-  <p>
-    Visit me on <a href="https://twitter.com/juristr">Twitter</a> or on
-    <a href="https://juristr.com/blog">blog</a>.
-  </p>
-</ng-template>
+<ng-template #newTab let-data="data"> Content of tab {{ data }} </ng-template>

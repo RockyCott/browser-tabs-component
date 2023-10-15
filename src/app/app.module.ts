@@ -5,17 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TabsFullModule } from './components/tabs/tabs-full.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PersonEditComponent } from './people/person-edit.component';
-import { PeopleListComponent } from './people/people-list.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TabComponent } from './components/tabs/components/tab/tab.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PersonEditComponent,
-    PeopleListComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -24,6 +18,6 @@ import { TabComponent } from './components/tabs/components/tab/tab.component';
     ReactiveFormsModule,
   ],
   bootstrap: [AppComponent],
-  entryComponents: [TabComponent]
+  entryComponents: [TabComponent],
 })
 export class AppModule {}

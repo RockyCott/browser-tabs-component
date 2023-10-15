@@ -8,5 +8,6 @@ import { DynamicTabsDirective } from './directives/dynamic-tabs.directive';
   declarations: [TabsFullComponent, TabComponent, DynamicTabsDirective],
   imports: [CommonModule, DragDropModule],
   exports: [TabsFullComponent, TabComponent],
+  entryComponents: [TabComponent],
 })
 export class TabsFullModule {}

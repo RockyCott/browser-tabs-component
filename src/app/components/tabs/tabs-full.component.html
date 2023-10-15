@@ -1,3 +1,4 @@
+<!-- TabsComponent view template -->
 <div
   class="sd-tabs"
   [ngClass]="{ dark: darkMode, 'drag-list': isDraggable }"
@@ -7,10 +8,12 @@
   cdkDropListOrientation="horizontal"
   (cdkDropListDropped)="drop($event)"
 >
+  <!-- nav tab headers are generated here -->
+  <!-- STATIC TABS -->
   <div
     *ngFor="let tab of tabs"
     class="sd-tab-label"
-    [ngClass]="{ active: tab.active === true }"
+    [class.active]="tab.active"
     (click)="selectTab(tab)"
     [title]="tab.title"
     cdkDrag
@@ -43,3 +46,4 @@
   </div>
 </div>
 <ng-content></ng-content>
+<ng-template dynamic-tabs #container></ng-template>

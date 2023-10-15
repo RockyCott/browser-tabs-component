@@ -1,13 +1,17 @@
 import {
   AfterContentInit,
+  ChangeDetectorRef,
   Component,
+  ComponentFactoryResolver,
   ContentChildren,
   HostListener,
   Input,
   QueryList,
+  ViewChild,
 } from '@angular/core';
 import { TabComponent } from './components/tab/tab.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DynamicTabsDirective } from './directives/dynamic-tabs.directive';
 
 @Component({
   selector: 'app-tabs-full',
@@ -19,26 +23,74 @@ export class TabsFullComponent implements AfterContentInit {
   @Input() darkMode = false;
   @Input() isDraggable = true;
 
-  dynamicTabs: TabComponent[] = [];
+  /*
+   * Alternative approach of using an anchor directive
+   * would be to simply get hold of a template variable
+   * as follows
+   */
+  //@ViewChild('container', {read: ViewContainerRef}) dynamicTabPlaceholder;
+
+  @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: any;
+
+  // Angular <= v13
+  //constructor(private _componentFactoryResolver: ComponentFactoryResolver) {}
 
   // contentChildren are set
   ngAfterContentInit() {
     // agregarle a la tab el index
-    this.tabs.forEach((tab, index) => (tab.index = index));
+    //this.tabs.forEach((tab, index) => (tab.index = index));
+
+    this.resetTabIndex();
 
     // get all active tabs
     let activeTabs = this.tabs.filter((tab) => tab.active);
 
     // if there is no active tab set, activate the first
-    if (activeTabs.length === 0) {
+    if (activeTabs?.length === 0) {
       this.selectTab(this.tabs.first);
     }
+  }
+
+  newTab(title: string, template: any, data: any, isCloseable = false) {
+    // (Angular <= v13)
+
+    // get a component factory for our TabComponent
+    // const componentFactory = this._componentFactoryResolver.resolveComponentFactory(
+    //   TabComponent
+    // );
+
+    // fetch the view container reference from our anchor directive
+    //const viewContainerRef = this.dynamicTabPlaceholder.viewContainer;
+
+    // create a component instance
+    //const componentRef = viewContainerRef.createComponent(componentFactory);
+
+    // (Angular >= v14)
+
+    // create a component instance directly
+    const componentRef =
+      this.dynamicTabPlaceholder?.viewContainer?.createComponent(TabComponent);
+
+    // set the according properties on our component instance
+    const instance: TabComponent = componentRef.instance as TabComponent;
+
+    instance.title = title;
+    instance.template = template;
+    instance.dataContext = data;
+    instance.isCloseable = isCloseable;
+
+    //this.dynamicTabs.push(componentRef.instance as TabComponent);
+    const tabs = this.tabs.toArray();
+    tabs.push(componentRef.instance as TabComponent);
+    this.tabs.reset(tabs);
+    // set it active
+    //this.selectTab(this.dynamicTabs[this.dynamicTabs.length - 1]);
+    this.selectTab(this.tabs.last);
   }
 
   selectTab(tab: TabComponent) {
     // deactivate all tabs
     this.tabs.toArray().forEach((tab) => (tab.active = false));
-
     // activate the tab the user has clicked on.
     tab.active = true;
   }
@@ -61,6 +113,14 @@ export class TabsFullComponent implements AfterContentInit {
 
     // Elimina la pestaña de la lista de pestañas.
     this.tabs.reset(this.tabs.filter((t) => t !== tab));
+  }
+
+  closeActiveTab() {
+    const activeStaticTabs = this.tabs.filter((tab) => tab.active);
+    if (activeStaticTabs?.length) {
+      // close the 1st active tab (should only be one at a time)
+      this.closeTab(activeStaticTabs[0]);
+    }
   }
 
   @HostListener('keydown', ['$event'])
@@ -96,5 +156,10 @@ export class TabsFullComponent implements AfterContentInit {
     const tabs = this.tabs.toArray();
     moveItemInArray(tabs, event.previousIndex, event.currentIndex);
     this.tabs.reset(tabs);
+    this.resetTabIndex();
+  }
+
+  resetTabIndex() {
+    this.tabs.forEach((tab, index) => (tab.index = index));
   }
 }

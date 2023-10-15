@@ -8,4 +8,16 @@ import { TabsFullComponent } from './components/tabs/tabs-full.component';
 })
 export class AppComponent {
   title = 'tabs-component';
+  @ViewChild(TabsFullComponent) tabsFullComponent: TabsFullComponent;
+  @ViewChild('newTab') newTabTemplate: any;
+
+
+  onNewTab() {
+    this.tabsFullComponent?.newTab('About', this.newTabTemplate, {}, true);
+  }
+
+  onCloseTab() {
+    // close the tab
+    this.tabsFullComponent?.closeActiveTab();
+  }
 }

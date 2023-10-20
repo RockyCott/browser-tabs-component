@@ -53,7 +53,7 @@ export class AppComponent {
     console.log('tabSelected', event);
   }
 
-  prueba(event: any) {
+  proof(event: any) {
     console.log(event);
   }
 }

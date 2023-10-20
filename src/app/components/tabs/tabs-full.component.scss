@@ -232,6 +232,20 @@
   outline: none;
   background-color: var(--tabs-selected-bg-color);
   color: var(--tabs-selected-text-color);
+  .error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 16px;
+    ::ng-deep mat-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px !important;
+    }
+    margin-right: 2px;
+  }
 }
 
 .cdk-drag-placeholder {
@@ -363,7 +377,7 @@
 }
 
 .tab-bar-top-indicator {
-  border-top: 2px solid #339900;
+  border-top: 2px solid #3f51b5;
 }
 
 .sd-tab-label.disabled {

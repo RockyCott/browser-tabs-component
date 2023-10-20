@@ -82,15 +82,13 @@ export class TabsFullComponent implements AfterContentInit {
 
   /**
    * Indica si permitir editar el nombre de la pestaña.
-   * Por defecto es false.
-   */
-  @Input() public nameEditable: boolean = false;
-
-  /**
-   * Indica si permitir editar el nombre de la pestaña.
+   * Por defecto es true.
    */
   @Input() public isNameEditable: boolean = true;
-
+  
+  /**
+   * Evento que se dispara cuando se cambia el nombre de una pestaña.
+   */
   @Output() private tabNameChangedEvent = new EventEmitter<TabComponent>();
 
   /**
@@ -145,7 +143,7 @@ export class TabsFullComponent implements AfterContentInit {
     }
   }
 
-  scrollView(): void {
+  private scrollView(): void {
     const activeTab = this.tabs.find((tab) => tab.active);
     if (activeTab) {
       const tab = this.elementRef?.nativeElement.querySelector(
@@ -356,7 +354,7 @@ export class TabsFullComponent implements AfterContentInit {
     }
   }
 
-  startEditingTabName(tab: TabComponent) {
+  protected startEditingTabName(tab: TabComponent): void {
     this.tabs.forEach((t) => (t.isNameEditing = false));
     tab.isNameEditing = true;
     tab.editName = tab.tabTitle;
@@ -369,7 +367,7 @@ export class TabsFullComponent implements AfterContentInit {
     });
   }
 
-  stopEditingTabName(tab: TabComponent, inputElement: HTMLInputElement) {
+  protected stopEditingTabName(tab: TabComponent, inputElement: HTMLInputElement): void {
     tab.isNameEditing = false;
     this.tabs.forEach((t) => (t.isNameEditing = false));
     if (tab.editName) {

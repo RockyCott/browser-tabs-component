@@ -136,8 +136,8 @@
 
 <!-- TAB CONTENT TEMPLATE -->
 <ng-template #tabContentTemplate let-tab="tab">
-  <div class="sd-tab-icon" *ngIf="tab.inError">
-    <mat-icon class="center-icon mat-error">error</mat-icon>
+  <div class="sd-tab-icon error" *ngIf="tab.inError" title="Hay un error dentro de esta tab">
+    <mat-icon class="center-icon mat-error error">error</mat-icon>
   </div>
   <div *ngIf="!isNameEditable" class="sd-tab-desc">
     {{ tab.tabTitle }}
@@ -156,6 +156,7 @@
     #tabTitleInput
     id="tabTitleInput"
     (blur)="stopEditingTabName(tab, tabTitleInput)"
+    (keyup.enter)="stopEditingTabName(tab, tabTitleInput)"
   />
   <div
     *ngIf="tab.isCloseable && !tab.isDisabled && tabs.length > 1"

@@ -1,26 +1,38 @@
-# TabsComponent
+# Browser tab Component
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
+
+
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+# Tabs Component for Angular
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This is an Angular component that provides a tabbed interface for your web application. It allows you to create tabs, switch between them, and perform various tab-related actions.
 
-## Build
+## Features of the Tabs Component
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Customizable**: You can customize the appearance and behavior of your tabs.
+- **IsDraggable**: You can drag and drop tabs to reorder them.
+- **ShowAddTabBUtton**: You can add a button to add new tabs as browsers do.
+- **Scrollable Tabs**: Supports both scrollable and non-scrollable tab lists.
+- **tabIndicator**: Tabs can have an indicator to show which tab is active. 
+- **closeWithDoubleClick**: Tabs can be closed with a double-click.
+- **Double-Click to Edit Tab Name**: Edit tab names with a double-click if you want.
+- **Dynamically Add and Remove Tabs**: Easily add or remove tabs dynamically.
+- **Tab Content**: Each tab can have its own content, which can be customized.
+- **Tab Events**: You can listen to tab events such as tabAdded, tabRemoved, tabSelected, etc.
 
-## Running unit tests
+## It works in progress
+![example 1](./assets%20readme/TabsComponent.gif)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+![example 2](./assets%20readme/TabsComponent2.gif)
 
-## Running end-to-end tests
+![example 3](./assets%20readme/TabsComponent3.gif)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+![Use example](./assets%20readme//example%20code.png)
 
 ## Further help
 

@@ -4,10 +4,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 I greatly appreciate your support and hope you find the component useful. Feel free to check it out and provide any additional feedback you may have. 🚀
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
 # Tabs Component for Angular
 
 This is an Angular component that provides a tabbed interface for your web application. It allows you to create tabs, switch between them, and perform various tab-related actions.
@@ -33,7 +29,3 @@ This is an Angular component that provides a tabbed interface for your web appli
 ![example 3](./assets%20readme/TabsComponent3.gif)
 
 ![Use example](./assets%20readme//example%20code.png)
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

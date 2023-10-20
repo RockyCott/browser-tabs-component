@@ -29,7 +29,7 @@
 }
 
 .sd-tabs.drag-list > .sd-tab-label {
-  cursor: move !important;
+  cursor: grab !important;
 }
 
 .sd-tabs:not(.drag-list) > .sd-tab-label {
@@ -62,6 +62,7 @@
   bottom: 0px;
   z-index: -1;
   opacity: 0;
+  visibility: hidden;
 }
 .sd-tabs > .sd-tab-label:not(.active):not(:hover) {
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0.25);
@@ -73,10 +74,6 @@
 .sd-tabs > .sd-tab-label.active + .sd-tab-label.active,
 .sd-tabs > .sd-tab-label:hover + .sd-tab-label:not(.active) {
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0);
-}
-.sd-tabs > .sd-tab-label.active:hover {
-  /* transition: opacity ease .2s, box-shadow ease .2s;
-  */
 }
 .sd-tabs > .sd-tab-label:hover::before,
 .sd-tabs > .sd-tab-label.active::before {
@@ -92,11 +89,18 @@
 .sd-tabs.dark > .sd-tab-label.active::before {
   box-shadow: 14px 0.25em 0 -4px var(--dark-tabs-selected-bg-color);
 }
-.sd-tabs > .sd-tab-label:hover::after,
-.sd-tabs > .sd-tab-label.active::after {
-  //right: -100%;
+.sd-tabs > .sd-tab-label:not(.last-tab):hover::after,
+.sd-tabs > .sd-tab-label.active:not(.last-tab)::after {
+  right: -100%;
   border-radius: 0 0 0 10px;
   opacity: 1;
+  /* transition: opacity ease .2s, box-shadow ease .2s;
+  */
+}
+
+.sd-tabs > .sd-tab-label.last-tab:hover::after,
+.sd-tabs > .sd-tab-label.active.last-tab::after {
+  right: 0% !important;
   /* transition: opacity ease .2s, box-shadow ease .2s;
   */
 }
@@ -149,16 +153,23 @@
   text-overflow: ellipsis;
   overflow: hidden;
   position: relative;
-  font-size: 0.75rem;
   flex: 1 1 0%;
+  font-size: 14px !important;
+  font-weight: 500;
 }
 .sd-tabs > .sd-tab-label .sd-tab-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-  width: 15px;
+  width: 16px;
   padding: 2px 3px;
+  ::ng-deep mat-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px !important;
+  }
 }
 .sd-tabs > .sd-tab-label .sd-tab-icon:not(.sd-tab-close) {
   width: 20px;
@@ -172,10 +183,6 @@
 }
 .sd-tabs > .sd-tab-label .sd-tab-close {
   margin-left: auto;
-}
-.sd-tabs > .sd-tab-label::after,
-.sd-tabs > .sd-tab-label::before {
-  visibility: hidden;
 }
 @media (min-width: 600px) {
   .sd-tabs {
@@ -198,6 +205,7 @@
 
 .sd-tab-close {
   cursor: pointer !important;
+  border-radius: 50% !important;
 }
 
 .drag-list {
@@ -253,7 +261,7 @@
   border: none;
   font-size: 22px;
   font-weight: 500;
-  border-radius: 25%;
+  border-radius: 50%;
   cursor: pointer;
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0);
   /* Estilo para el hover (efecto circular) */
@@ -285,18 +293,50 @@
 }
 
 .scroll-button {
-  background-color: transparent; /* Color de fondo */
-  color: var(--tabs-text-color); /* Color del icono */
+  background-color: transparent;
+  color: var(--tabs-text-color);
   border: none;
   font-size: 22px;
   font-weight: 500;
-  border-radius: 25%;
   cursor: pointer;
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 70%;
   &:hover {
     background-color: #4c4c4c33;
+    border-radius: 50%;
     color: var(--tabs-hover-text-color);
   }
+  ::ng-deep mat-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.scroll-button.disable {
+  background-color: transparent !important;
+  color: rgba(0, 0, 0, 0.26) !important;
+  border: none !important;
+  cursor: default !important;
+}
+
+.scroll-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+}
+
+.margin-left-4 {
+  margin-left: 4px;
+}
+
+.margin-left-2 {
+  margin-left: 2px;
 }
 
 .disable,
@@ -310,6 +350,26 @@
   order: -1;
 }
 
+#scroll-right {
+  order: 12;
+}
+
 // .left-box-shadow {
 //   box-shadow: 8px 0px 0 -7px rgba(0, 0, 0, 0.75) !important;
+// }
+
+.tab-bar-bottom-indicator {
+  border-bottom: 2px solid #3f51b5;
+}
+
+.tab-bar-top-indicator {
+  border-top: 2px solid #339900;
+}
+
+.sd-tab-label.disabled {
+  background-color: #b7b7b7 !important;
+}
+
+// .sd-tab-label .sd-tab-desc.sd-tab-name {
+//   cursor: default !important;
 // }

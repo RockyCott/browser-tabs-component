@@ -5,15 +5,21 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DynamicTabsDirective } from './directives/dynamic-tabs.directive';
 import { ScrollableDirective } from './directives/scrollable.directive';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 @NgModule({
-  declarations: [
-    TabsFullComponent,
-    TabComponent,
-    DynamicTabsDirective,
+  declarations: [TabsFullComponent, TabComponent],
+  imports: [
+    CommonModule,
+    DragDropModule,
     ScrollableDirective,
+    MatIconModule,
+    FormsModule,
+    MatButtonModule,
+    DynamicTabsDirective,
+    MatIconModule,
   ],
-  imports: [CommonModule, DragDropModule],
   exports: [TabsFullComponent, TabComponent],
-  entryComponents: [TabComponent],
 })
 export class TabsFullModule {}

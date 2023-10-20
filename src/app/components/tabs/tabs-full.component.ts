@@ -9,7 +9,6 @@ import {
   Input,
   Output,
   QueryList,
-  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { TabComponent } from './components/tab/tab.component';
@@ -29,10 +28,12 @@ export class TabsFullComponent implements AfterContentInit {
   @ContentChildren(TabComponent) protected tabs!: QueryList<TabComponent>;
   /**
    * Indica si el modo oscuro está activado.
+   * Por defecto es false.
    */
   @Input() public darkMode = false;
   /**
-   * Indica si las pestañas pueden ser arrastradas
+   * Indica si las pestañas pueden ser arrastradas.
+   * Por defecto es true.
    */
   @Input() public isDraggable = true;
   /**
@@ -42,11 +43,55 @@ export class TabsFullComponent implements AfterContentInit {
    */
   @Input() public hasCloseableEmit = false;
 
+  /**
+   * Indica si mostrar el botón de agregar pestaña.
+   * Por defecto es true.
+   */
   @Input() public showAddTabButton = true;
 
+  /**
+   * Indica si el 'responsive' de las pestañas es con scroll y flechas laterales.
+   * Por defecto es false.
+   */
   @Input() public isScrollable = false;
 
+  /**
+   * Indica si al ser scrollable, cuantas unidades se desplaza al oprimir las flechas laterales
+   * Por defecto es 200.
+   */
   @Input() public scrollUnit: number = 200;
+
+  /**
+   * Indica si mostrar el indicador de pestaña activa. (barra horizontal)
+   * Por defecto es false.
+   */
+  @Input() public tabIndicator: boolean = false;
+
+  /**
+   * Indica la posición del indicador de pestaña activa. (barra horizontal)
+   * Por defecto es 'top'.
+   * Valores posibles: 'top' | 'bottom'
+   */
+  @Input() public tabIndicatorPosition: 'top' | 'bottom' = 'top';
+
+  /**
+   * Indica si permitir cerrar la pestaña con doble clic.
+   * Por defecto es false.
+   */
+  @Input() public closeWithDoubleClick: boolean = false;
+
+  /**
+   * Indica si permitir editar el nombre de la pestaña.
+   * Por defecto es false.
+   */
+  @Input() public nameEditable: boolean = false;
+
+  /**
+   * Indica si permitir editar el nombre de la pestaña.
+   */
+  @Input() public isNameEditable: boolean = true;
+
+  @Output() private tabNameChangedEvent = new EventEmitter<TabComponent>();
 
   /**
    * Evento que se dispara cuando se oprime el botón de cerrar pestaña.
@@ -57,25 +102,42 @@ export class TabsFullComponent implements AfterContentInit {
    */
   @Output() private tabSelectedEvent = new EventEmitter<TabComponent>();
 
+  /**
+   * Evento que se dispara cuando se oprime el botón de agregar pestaña.
+   */
   @Output() private addTabButtonEvent = new EventEmitter<boolean>();
 
+  /**
+   * Evento que se dispara cuando se intenta cerrar una pestaña con doble clic.
+   */
+  @Output() private closeTabWithDoubleClickEvent =
+    new EventEmitter<TabComponent>();
+
+  @Output() private resetTabIndexEvent = new EventEmitter<TabComponent[]>();
+
+  /**
+   * Referencia al contenedor de pestañas dinamicas
+   */
   @ViewChild(DynamicTabsDirective) private dynamicTabPlaceholder: any;
 
+  /**
+   * Referencia al contenedor que cuenta con la directiva ScrollableDirective
+   * para el scroll horizontal de las pestañas con flechas laterales.
+   */
   @ViewChild('scrollable') private appScrollable: ScrollableDirective;
 
-  protected isOverflow = false;
+  /**
+   * Temporizador para el doble clic.
+   */
+  private doubleClickTimer: any;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private elementRef: ElementRef,
-    private renderer: Renderer2
-  ) {}
+  constructor(private cdr: ChangeDetectorRef, private elementRef: ElementRef) {}
 
   // contentChildren are set
   ngAfterContentInit() {
     this.resetTabIndex();
     // get all active tabs
-    let activeTabs = this.tabs.filter((tab) => tab.active);
+    let activeTabs = this.tabs?.filter((tab) => tab.active);
 
     // if there is no active tab set, activate the first
     if (activeTabs?.length === 0) {
@@ -83,7 +145,7 @@ export class TabsFullComponent implements AfterContentInit {
     }
   }
 
-  scrollView() {
+  scrollView(): void {
     const activeTab = this.tabs.find((tab) => tab.active);
     if (activeTab) {
       const tab = this.elementRef?.nativeElement.querySelector(
@@ -96,11 +158,14 @@ export class TabsFullComponent implements AfterContentInit {
         const selectedItemLeft = tab.offsetLeft;
         const selectedItemWidth = tab.clientWidth;
 
-        // Calcula la posición del scroll hacia la derecha
         const scrollPosition =
           selectedItemLeft + selectedItemWidth - containerWidth;
-        // Realiza el desplazamiento hacia la derecha de forma suave
-        this.renderer.setProperty(container, 'scrollLeft', scrollPosition);
+        // Realiza el desplazamiento de forma suave
+        //this.renderer.setProperty(container, 'scrollLeft', scrollPosition);
+        container.scrollTo({
+          left: scrollPosition,
+          behavior: 'smooth',
+        });
       }
     }
   }
@@ -118,24 +183,23 @@ export class TabsFullComponent implements AfterContentInit {
     // set the according properties on our component instance
     const instance: TabComponent = componentRef.instance as TabComponent;
 
-    instance.title = title || 'New Tab';
+    instance.tabTitle = title || 'New Tab';
+    instance.editName = instance.tabTitle;
     instance.template = template;
     instance.dataContext = data;
     instance.isCloseable = isCloseable;
+    instance.isFirst = false;
+    instance.isLast = true;
 
-    //this.dynamicTabs.push(componentRef.instance as TabComponent);
     const tabs = this.tabs.toArray();
-    tabs.push(componentRef.instance as TabComponent);
+
+    tabs.push(instance);
     this.tabs.reset(tabs);
     this.resetTabIndex();
     // set it active
     this.selectTab(this.tabs.last);
     if (this.isScrollable) {
       this.cdr.detectChanges();
-      const appScrollableOverflow = this.appScrollable?.isOverflow;
-      if (appScrollableOverflow !== this.isOverflow) {
-        this.isOverflow = appScrollableOverflow;
-      }
       setTimeout(() => {
         if (this.appScrollable?.canScrollEnd) {
           this.appScrollable.scrollToEnd();
@@ -148,7 +212,7 @@ export class TabsFullComponent implements AfterContentInit {
    * Selecciona una pestaña.
    * @param tab - Pestaña a seleccionar.
    */
-  selectTab(tab: TabComponent): void {
+  public selectTab(tab: TabComponent): void {
     const activeTabs = this.tabs.filter((tab) => tab.active);
     // deactivate all tabs
     this.tabs.toArray().forEach((tab) => (tab.active = false));
@@ -191,10 +255,6 @@ export class TabsFullComponent implements AfterContentInit {
     this.resetTabIndex();
     if (this.isScrollable) {
       this.cdr.detectChanges();
-      const appScrollableOverflow = this.appScrollable?.isOverflow;
-      if (appScrollableOverflow !== this.isOverflow) {
-        this.isOverflow = appScrollableOverflow;
-      }
     }
   }
 
@@ -216,22 +276,21 @@ export class TabsFullComponent implements AfterContentInit {
       // Encuentra la pestaña activa actual
       const activeTab = this.tabs.find((tab) => tab.active);
       if (activeTab) {
-        // Encuentra el índice de la pestaña activa
-        const activeTabIndex = this.tabs.toArray().indexOf(activeTab);
-
         // Determina la dirección del movimiento (Tab adelante o Tab atrás)
         const shiftKey = event.shiftKey;
-        const direction = shiftKey ? 1 : -1;
-
+        const direction = shiftKey ? -1 : 1;
         // Calcula el nuevo índice de la pestaña
-        let newTabIndex = (activeTabIndex + direction) % this.tabs?.length;
-
+        const tabLength = this.tabs.length;
+        let newTabIndex = activeTab.index + direction;
         if (newTabIndex < 0) {
           newTabIndex = this.tabs.length - 1;
+        } else if (newTabIndex >= tabLength) {
+          newTabIndex = 0;
         }
-
-        // Cambia el enfoque a la nueva pestaña
-        this.selectTab(this.tabs.toArray()[newTabIndex]);
+        setTimeout(() => {
+          // Cambia el enfoque a la nueva pestaña
+          this.selectTab(this.tabs.toArray()[newTabIndex]);
+        });
       }
     }
   }
@@ -250,8 +309,20 @@ export class TabsFullComponent implements AfterContentInit {
   /**
    * Reinicia los índices de las pestañas.
    */
-  private resetTabIndex() {
-    this.tabs?.forEach((tab, index) => (tab.index = index));
+  private resetTabIndex(emitData: boolean = false) {
+    if (this.tabs?.length) {
+      this.tabs?.forEach((tab, index) => (tab.index = index));
+      // set isFirst and isLast for all tabs
+      this.tabs?.forEach((tab) => {
+        tab.isFirst = false;
+        tab.isLast = false;
+      });
+      this.tabs.first.isFirst = true;
+      this.tabs.last.isLast = true;
+      if (emitData) {
+        this.resetTabIndexEvent.emit(this.tabs.toArray());
+      }
+    }
   }
 
   /**
@@ -267,5 +338,58 @@ export class TabsFullComponent implements AfterContentInit {
 
   protected addTabButton() {
     this.addTabButtonEvent.emit(true);
+  }
+
+  protected handleTabDoubleClick(tab: TabComponent) {
+    if (this.doubleClickTimer) {
+      // El usuario hizo doble clic
+      this.closeTabWithDoubleClickEvent.emit(tab);
+      clearTimeout(this.doubleClickTimer);
+      this.doubleClickTimer = null;
+    } else {
+      // posible doble clic
+      this.doubleClickTimer = setTimeout(() => {
+        clearTimeout(this.doubleClickTimer);
+        this.doubleClickTimer = null;
+      }, 300); // tiempo de espera
+      this.selectTab(tab);
+    }
+  }
+
+  startEditingTabName(tab: TabComponent) {
+    this.tabs.forEach((t) => (t.isNameEditing = false));
+    tab.isNameEditing = true;
+    tab.editName = tab.tabTitle;
+    setTimeout(() => {
+      const inputElement =
+        this.elementRef.nativeElement.querySelector('#tabTitleInput');
+      if (inputElement) {
+        inputElement.select();
+      }
+    });
+  }
+
+  stopEditingTabName(tab: TabComponent, inputElement: HTMLInputElement) {
+    tab.isNameEditing = false;
+    this.tabs.forEach((t) => (t.isNameEditing = false));
+    if (tab.editName) {
+      tab.tabTitle = tab.editName;
+    } else {
+      tab.editName = tab.tabTitle;
+    }
+    inputElement.setSelectionRange(0, 0);
+    this.tabNameChangedEvent.emit(tab);
+  }
+
+  /**
+   * Se dispara cuando se selecciona una pestaña.
+   * @param tab - Pestaña seleccionada.
+   */
+  protected selectTabMode(tab: TabComponent) {
+    if (this.closeWithDoubleClick) {
+      this.handleTabDoubleClick(tab);
+    } else {
+      this.selectTab(tab);
+    }
   }
 }

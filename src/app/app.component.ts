@@ -11,7 +11,7 @@ export class AppComponent {
   @ViewChild(TabsFullComponent) tabsFullComponent: TabsFullComponent;
   @ViewChild('newTab') newTabTemplate: any;
 
-  numero = 4;
+  numero = 5;
 
   onNewTab() {
     this.tabsFullComponent?.newTab(
@@ -38,7 +38,22 @@ export class AppComponent {
     }
   }
 
+  onCloseTabSelectedWithDoubleClick(tab: any) {
+    // Puedes mostrar un cuadro de diálogo de confirmación si es necesario.
+    const userConfirmed = confirm(`¿Cerrar la pestaña ${tab.tabTitle}?`);
+
+    if (userConfirmed) {
+      this.tabsFullComponent.closeTab(tab);
+    } else {
+      this.tabsFullComponent.selectTab(tab);
+    }
+  }
+
   tabSelected(event: any) {
     console.log('tabSelected', event);
+  }
+
+  prueba(event: any) {
+    console.log(event);
   }
 }

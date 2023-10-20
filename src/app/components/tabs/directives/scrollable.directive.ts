@@ -3,6 +3,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 @Directive({
   selector: '[appScrollable]',
   exportAs: 'appScrollable',
+  standalone: true,
 })
 export class ScrollableDirective {
   @Input() public scrollUnit: number = 200;

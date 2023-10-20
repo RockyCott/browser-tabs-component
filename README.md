@@ -2,7 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
 
-
+I greatly appreciate your support and hope you find the component useful. Feel free to check it out and provide any additional feedback you may have. 🚀
 
 ## Development server
 

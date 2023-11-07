@@ -1,3 +1,25 @@
+/** * THEME LIGHT */
+$main-bg-color-light: rgba(255, 255, 255);
+/* tabs colors */
+$tabs-header-bg-color: transparent; //rgb(231, 234, 236);
+$tabs-bg-color: $tabs-header-bg-color;
+$tabs-selected-bg-color: $main-bg-color-light;
+$tabs-hover-bg-color: rgb(240, 243, 245);
+$tabs-text-color: rgb(88, 92, 95);
+$tabs-hover-text-color: rgb(88, 92, 95);
+$tabs-selected-text-color: rgb(47, 48, 49);
+$tabs-height: 2.2rem;
+/** * THEME DARK */
+$main-bg-color-dark: rgb(49, 53, 57);
+/* tabs colors */
+$dark-tabs-header-bg-color: rgb(31, 32, 35);
+$dark-tabs-bg-color: $main-bg-color-dark;
+$dark-tabs-selected-bg-color: $dark-tabs-header-bg-color;
+$dark-tabs-hover-bg-color: #25282b;
+$dark-tabs-text-color: rgb(134, 136, 138);
+$dark-tabs-hover-text-color: rgb(255, 255, 255);
+$dark-tabs-selected-text-color: rgb(221, 226, 231);
+
 .sd-tabs {
   display: flex;
   flex-direction: column;
@@ -6,13 +28,13 @@
   background: #e5e5e5;
   padding-top: 0.075rem;
   position: relative;
-  background-color: var(--tabs-bg-color);
+  background-color: $tabs-bg-color;
 }
 .sd-tabs.dark {
-  background-color: var(--dark-tabs-bg-color);
+  background-color: $dark-tabs-bg-color;
 }
 .sd-tabs > .sd-tab-label {
-  background-color: var(--tabs-bg-color);
+  background-color: $tabs-bg-color;
   padding: 3px 5px 5px 10px;
   display: flex;
   align-items: center;
@@ -21,32 +43,29 @@
   border-radius: 5px 5px 0 0;
   position: relative;
   z-index: 2;
-  max-height: var(--tabs-height);
+  max-height: $tabs-height;
   /* transition: background-color ease .2s, box-shadow ease .2s;
   */
   flex: 1;
   outline: none;
 }
-
 .sd-tabs.drag-list > .sd-tab-label {
   cursor: grab !important;
 }
-
 .sd-tabs:not(.drag-list) > .sd-tab-label {
   cursor: pointer !important;
 }
-
 .sd-tabs.dark > .sd-tab-label {
-  background-color: var(--dark-tabs-bg-color);
+  background-color: $dark-tabs-bg-color;
 }
 .sd-tabs > .sd-tab-label:hover {
-  background-color: var(--tabs-hover-bg-color);
-  color: var(--tabs-hover-text-color);
+  background-color: $tabs-hover-bg-color;
+  color: $tabs-hover-text-color;
   z-index: 3;
 }
 .sd-tabs.dark > .sd-tab-label:hover {
-  background-color: var(--dark-tabs-hover-bg-color);
-  color: var(--dark-tabs-hover-text-color);
+  background-color: $dark-tabs-hover-bg-color;
+  color: $dark-tabs-hover-text-color;
 }
 .sd-tabs > .sd-tab-label.active {
   z-index: 4;
@@ -66,10 +85,10 @@
 }
 .sd-tabs > .sd-tab-label:not(.active):not(:hover) {
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0.25);
-  color: var(--tabs-text-color);
+  color: $tabs-text-color;
 }
 .sd-tabs.dark > .sd-tab-label:not(.active):not(:hover) {
-  color: var(--dark-tabs-text-color);
+  color: $dark-tabs-text-color;
 }
 .sd-tabs > .sd-tab-label.active + .sd-tab-label.active,
 .sd-tabs > .sd-tab-label:hover + .sd-tab-label:not(.active) {
@@ -84,10 +103,10 @@
   */
 }
 .sd-tabs > .sd-tab-label.active::before {
-  box-shadow: 14px 0.25em 0 -4px var(--tabs-selected-bg-color);
+  box-shadow: 14px 0.25em 0 -4px $tabs-selected-bg-color;
 }
 .sd-tabs.dark > .sd-tab-label.active::before {
-  box-shadow: 14px 0.25em 0 -4px var(--dark-tabs-selected-bg-color);
+  box-shadow: 14px 0.25em 0 -4px $dark-tabs-selected-bg-color;
 }
 .sd-tabs > .sd-tab-label:not(.last-tab):hover::after,
 .sd-tabs > .sd-tab-label.active:not(.last-tab)::after {
@@ -105,39 +124,39 @@
   */
 }
 .sd-tabs > .sd-tab-label.active::after {
-  box-shadow: -14px 0.25em 0 -4px var(--tabs-selected-bg-color);
+  box-shadow: -14px 0.25em 0 -4px $tabs-selected-bg-color;
 }
 .sd-tabs.dark > .sd-tab-label.active::after {
-  box-shadow: -14px 0.25em 0 -4px var(--dark-tabs-selected-bg-color);
+  box-shadow: -14px 0.25em 0 -4px $dark-tabs-selected-bg-color;
 }
 .sd-tabs > .sd-tab-label.active:hover,
 .sd-tabs > .sd-tab-label.active {
-  background-color: var(--tabs-selected-bg-color);
-  color: var(--tabs-selected-text-color);
+  background-color: $tabs-selected-bg-color;
+  color: $tabs-selected-text-color;
   z-index: 4;
 }
 .sd-tabs.dark > .sd-tab-label.active:hover,
 .sd-tabs.dark > .sd-tab-label.active {
-  background-color: var(--dark-tabs-selected-bg-color);
-  color: var(--dark-tabs-selected-text-color);
+  background-color: $dark-tabs-selected-bg-color;
+  color: $dark-tabs-selected-text-color;
   z-index: 4;
 }
 .sd-tabs > .sd-tab-label:not(.active):hover::before {
-  box-shadow: 14px 0.25em 0 -4px var(--tabs-hover-bg-color);
+  box-shadow: 14px 0.25em 0 -4px $tabs-hover-bg-color;
   opacity: 1;
   /* transition: all .2s;
   */
 }
 .sd-tabs.dark > .sd-tab-label:not(.active):hover::before {
-  box-shadow: 14px 0.25em 0 -4px var(--dark-tabs-hover-bg-color);
+  box-shadow: 14px 0.25em 0 -4px $dark-tabs-hover-bg-color;
 }
 .sd-tabs > .sd-tab-label:not(.active):hover::after {
-  box-shadow: -14px 0.25em 0 -4px var(--tabs-hover-bg-color);
+  box-shadow: -14px 0.25em 0 -4px $tabs-hover-bg-color;
   /* transition: all .2s;
   */
 }
 .sd-tabs.dark > .sd-tab-label:not(.active):hover::after {
-  box-shadow: -14px 0.25em 0 -4px var(--dark-tabs-hover-bg-color);
+  box-shadow: -14px 0.25em 0 -4px $dark-tabs-hover-bg-color;
 }
 :root .sd-tabs > .sd-tab-label:first-of-type {
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0);
@@ -184,15 +203,27 @@
 .sd-tabs > .sd-tab-label .sd-tab-close {
   margin-left: auto;
 }
-@media (min-width: 600px) {
+@media (min-width: 100px) {
   .sd-tabs {
     flex-direction: row;
     flex-wrap: wrap;
   }
   .sd-tab-label {
-    max-width: 150px;
-    width: 150px;
+    max-width: 150px !important;
+    width: 150px !important;
     border-radius: 10px 10px 0 0;
+  }
+  .sd-tabs.isScrollable > .sd-tab-label {
+    min-width: 150px !important;
+  }
+  .sd-tabs > .sd-tab-label.active {
+    min-width: 150px !important;
+    transition: min-width 0.2s ease-in-out;
+  }
+
+
+  .item {
+    max-width: 150px !important;
   }
   .sd-tabs > .sd-tab-label::after,
   .sd-tabs > .sd-tab-label::before {
@@ -205,7 +236,10 @@
 
 .sd-tab-close {
   cursor: pointer !important;
-  border-radius: 50% !important;
+  border-radius: 10% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .drag-list {
@@ -227,12 +261,12 @@
   border-radius: 5px 5px 0 0;
   position: relative;
   z-index: 2;
-  max-height: var(--tabs-height);
+  max-height: $tabs-height;
   flex: 1;
   outline: none;
-  background-color: var(--tabs-selected-bg-color);
-  color: var(--tabs-selected-text-color);
-  .error {
+  background-color: $tabs-selected-bg-color;
+  color: $tabs-selected-text-color;
+  .tab-in-error {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -245,6 +279,17 @@
       font-size: 16px !important;
     }
     margin-right: 2px;
+  }
+  .sd-tab-desc {
+    display: block;
+    margin: 7px 5px 5px 2px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    flex: 1 1 0%;
+    font-size: 14px !important;
+    font-weight: 500;
   }
 }
 
@@ -266,28 +311,30 @@
   justify-content: center;
   margin-left: 4px;
   margin-right: 4px;
-  background-color: var(--tabs-bg-color);
+  background-color: $tabs-bg-color;
 }
 /* Estilo para el botón de añadir pestaña */
 .add-tab-button {
   background-color: transparent; /* Color de fondo */
-  color: var(--tabs-text-color); /* Color del icono */
+  color: $tabs-text-color; /* Color del icono */
   border: none;
-  font-size: 22px;
+  font-size: 24px;
+  height: 100%;
+  width: 2.2rem;
   font-weight: 500;
-  border-radius: 50%;
+  border-radius: 10%;
   cursor: pointer;
   box-shadow: -8px 0px 0 -7px rgba(0, 0, 0, 0);
   /* Estilo para el hover (efecto circular) */
   &:hover {
     background-color: #4c4c4c33;
-    color: var(--tabs-hover-text-color);
+    color: $tabs-hover-text-color;
   }
 }
 
 .list-with-scroll {
   display: flex;
-  background-color: var(--tabs-bg-color);
+  background-color: $tabs-bg-color;
 }
 
 .list {
@@ -308,7 +355,7 @@
 
 .scroll-button {
   background-color: transparent;
-  color: var(--tabs-text-color);
+  color: $tabs-text-color;
   border: none;
   font-size: 22px;
   font-weight: 500;
@@ -317,12 +364,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 70%;
-  height: 70%;
+  width: auto;
+  height: 100%;
   &:hover {
     background-color: #4c4c4c33;
-    border-radius: 50%;
-    color: var(--tabs-hover-text-color);
+    border-radius: 10%;
+    color: $tabs-hover-text-color;
   }
   ::ng-deep mat-icon {
     display: flex;
@@ -368,22 +415,24 @@
   order: 12;
 }
 
-// .left-box-shadow {
-//   box-shadow: 8px 0px 0 -7px rgba(0, 0, 0, 0.75) !important;
-// }
-
 .tab-bar-bottom-indicator {
   border-bottom: 2px solid #3f51b5;
 }
 
 .tab-bar-top-indicator {
-  border-top: 2px solid #3f51b5;
+  border-top: 2px solid #339900;
 }
 
 .sd-tab-label.disabled {
   background-color: #b7b7b7 !important;
 }
 
-// .sd-tab-label .sd-tab-desc.sd-tab-name {
-//   cursor: default !important;
-// }
+// ancho del border
+.border-input:focus {
+  outline: none;
+}
+
+// si está presente la clase sd-tab-icon entonces cambiar el cursor de .sd-tab-label
+.errorIcon:hover {
+  cursor: pointer !important;
+}

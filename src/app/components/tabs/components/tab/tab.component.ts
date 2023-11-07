@@ -64,9 +64,28 @@ export class TabComponent {
   @Input() public inError: boolean = false;
 
   /**
+   * The error content
+   * @default 'Hay errores dentro de la pestaña'
+   */
+  @Input() public errorContent: string = 'Hay errores dentro de la pestaña';
+
+  /**
    * The index of the tab
    */
   public index!: number;
 
+  /**
+   * The name of the tab in editing
+   */
   public editName: string;
+
+  /**
+   * The name previous of the tab
+   */
+  public previousName: string;
+
+  /**
+   * is the tab dynamic?
+   */
+  @Input() public isDynamicTab: boolean = false;
 }

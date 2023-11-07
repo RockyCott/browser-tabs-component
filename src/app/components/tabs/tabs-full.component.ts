@@ -68,6 +68,13 @@ export class TabsFullComponent implements AfterContentInit {
   @Input() public tabIndicator: boolean = false;
 
   /**
+   * @description
+   * Color del indicator para la tab activa
+   * @default '#3f51b5'
+   */
+  @Input() public tabIndicatorColor: string = '#3f51b5';
+
+  /**
    * Indica la posición del indicador de pestaña activa. (barra horizontal)
    * Por defecto es 'top'.
    * Valores posibles: 'top' | 'bottom'
@@ -85,7 +92,15 @@ export class TabsFullComponent implements AfterContentInit {
    * Por defecto es true.
    */
   @Input() public isNameEditable: boolean = true;
-  
+
+  /**
+   * Indica si todas las pestañas pueden ser cerradas.
+   * Por defecto es false.
+   * Si es true, se muestra el botón de cerrar en las pestañas
+   * que tengan el atributo isCloseable en true.
+   */
+  @Input() public allCloseable: boolean = false;
+
   /**
    * Evento que se dispara cuando se cambia el nombre de una pestaña.
    */
@@ -111,10 +126,21 @@ export class TabsFullComponent implements AfterContentInit {
   @Output() private closeTabWithDoubleClickEvent =
     new EventEmitter<TabComponent>();
 
+  /**
+   * Evento que se dispara cuando se reinician los índices de las pestañas
+   * y retorna la lista de pestañas actualizada.
+   */
   @Output() private resetTabIndexEvent = new EventEmitter<TabComponent[]>();
 
   /**
-   * Referencia al contenedor de pestañas dinamicas
+   * Evento que se dispara cuando se hace clic en el icono de error de una pestaña.
+   */
+  @Output() private errorIconClickEvent = new EventEmitter<TabComponent>();
+
+  /**
+   * Referencia al contenedor de pestañas dinamicas.
+   * Se utiliza para crear componentes dinamicamente.
+   * @see DynamicTabsDirective
    */
   @ViewChild(DynamicTabsDirective) private dynamicTabPlaceholder: any;
 
@@ -168,31 +194,26 @@ export class TabsFullComponent implements AfterContentInit {
     }
   }
 
-  public newTab(
-    title: string,
-    template: any,
-    data: any,
-    isCloseable = false
-  ): void {
+  public newTab(tabConfig: any, template: any, data: any = null): void {
     // create a component instance directly
     const componentRef =
       this.dynamicTabPlaceholder?.viewContainer?.createComponent(TabComponent);
 
     // set the according properties on our component instance
-    const instance: TabComponent = componentRef.instance as TabComponent;
-
-    instance.tabTitle = title || 'New Tab';
+    const instance: TabComponent = componentRef?.instance as TabComponent;
+    const { ...rest } = tabConfig;
+    Object.assign(instance, rest);
     instance.editName = instance.tabTitle;
-    instance.template = template;
     instance.dataContext = data;
-    instance.isCloseable = isCloseable;
     instance.isFirst = false;
     instance.isLast = true;
+    instance.template = template;
+    instance.isDynamicTab = true;
 
-    const tabs = this.tabs.toArray();
+    const tabs = this.tabs?.toArray();
 
     tabs.push(instance);
-    this.tabs.reset(tabs);
+    this.tabs?.reset(tabs);
     this.resetTabIndex();
     // set it active
     this.selectTab(this.tabs.last);
@@ -211,15 +232,19 @@ export class TabsFullComponent implements AfterContentInit {
    * @param tab - Pestaña a seleccionar.
    */
   public selectTab(tab: TabComponent): void {
-    const activeTabs = this.tabs.filter((tab) => tab.active);
-    // deactivate all tabs
-    this.tabs.toArray().forEach((tab) => (tab.active = false));
-    // activate the tab the user has clicked on.
-    tab.active = true;
-    if (!this.isDraggable && activeTabs?.length && activeTabs[0] !== tab) {
-      this.tabSelectedEvent.emit(tab);
+    if (tab) {
+      const activeTabs = this.tabs.filter((tab) => tab.active);
+      // deactivate all tabs
+      this.tabs.toArray().forEach((tab) => (tab.active = false));
+      setTimeout(() => {
+        // activate the tab the user has clicked on.
+        tab.active = true;
+        if (!this.isDraggable && activeTabs?.length && activeTabs[0] !== tab) {
+          this.tabSelectedEvent.emit(tab);
+        }
+        this.scrollView();
+      });
     }
-    this.scrollView();
   }
 
   /**
@@ -247,13 +272,26 @@ export class TabsFullComponent implements AfterContentInit {
         this.selectTab(this.tabs.toArray()[newIndex]);
       }
     }
-
+    if (tab?.isDynamicTab) {
+      const dynamicTabs = this.tabs.filter((t: TabComponent) => t.isDynamicTab);
+      const index = dynamicTabs.findIndex(
+        (t: TabComponent) => t.index === tab.index
+      );
+      if (index !== -1) {
+        this.removeDynamicTabByIndex(index);
+      }
+    }
+    const filterTabs = this.tabs.filter((t: TabComponent) => t !== tab);
     // Elimina la pestaña de la lista de pestañas.
-    this.tabs.reset(this.tabs.filter((t) => t !== tab));
+    this.tabs?.reset(filterTabs);
     this.resetTabIndex();
     if (this.isScrollable) {
       this.cdr.detectChanges();
     }
+  }
+
+  removeDynamicTabByIndex(index: number) {
+    this.dynamicTabPlaceholder?.viewContainer?.remove(index);
   }
 
   /**
@@ -354,6 +392,11 @@ export class TabsFullComponent implements AfterContentInit {
     }
   }
 
+  /**
+   * Se dispara cuando se hace doble clic en el nombre de una pestaña.
+   * Siempre y cuando el componente tabs tenga activado el modo de edición de nombre.
+   * @param tab - Pestaña seleccionada.
+   */
   protected startEditingTabName(tab: TabComponent): void {
     this.tabs.forEach((t) => (t.isNameEditing = false));
     tab.isNameEditing = true;
@@ -367,10 +410,20 @@ export class TabsFullComponent implements AfterContentInit {
     });
   }
 
-  protected stopEditingTabName(tab: TabComponent, inputElement: HTMLInputElement): void {
+  /**
+   * Se dispara cuando se hace clic fuera del nombre de una pestaña.
+   * Siempre y cuando el componente tabs tenga activado el modo de edición de nombre.
+   * @param tab - Pestaña seleccionada.
+   * @param inputElement - Elemento input del nombre de la pestaña.
+   */
+  protected stopEditingTabName(
+    tab: TabComponent,
+    inputElement: HTMLInputElement
+  ): void {
     tab.isNameEditing = false;
     this.tabs.forEach((t) => (t.isNameEditing = false));
     if (tab.editName) {
+      tab.previousName = tab.tabTitle;
       tab.tabTitle = tab.editName;
     } else {
       tab.editName = tab.tabTitle;
@@ -383,11 +436,41 @@ export class TabsFullComponent implements AfterContentInit {
    * Se dispara cuando se selecciona una pestaña.
    * @param tab - Pestaña seleccionada.
    */
-  protected selectTabMode(tab: TabComponent) {
+  protected selectTabMode(tab: TabComponent): void {
+    // si la tab seleccionada es la que está activa, no hacer nada
+    if (tab.active) {
+      return;
+    }
     if (this.closeWithDoubleClick) {
       this.handleTabDoubleClick(tab);
     } else {
       this.selectTab(tab);
     }
+  }
+
+  /**
+   * Delete all tabs
+   */
+  public deleteAllTabs(): void {
+    this.tabs.reset([]);
+    this.resetTabIndex();
+    this.dynamicTabPlaceholder?.viewContainer?.clear();
+  }
+
+  /**
+   * Method to get the tab by index
+   * @param index - Índice de la pestaña a buscar
+   * @returns - Retorna la pestaña que coincida con el índice dado
+   */
+  public tabByIndex(index: number): TabComponent | undefined {
+    return this.tabs?.find((tab) => tab.index === index);
+  }
+
+  /**
+   * Notifica al componente padre que se hizo clic en el icono de error de una pestaña.
+   * @param tab - Pestaña a la que pertenece el icono de error
+   */
+  public clickErrorIcon(tab: TabComponent): void {
+    this.errorIconClickEvent?.emit(tab);
   }
 }

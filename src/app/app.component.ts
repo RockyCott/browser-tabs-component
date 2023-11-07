@@ -1,5 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { TabsFullComponent } from './components/tabs/tabs-full.component';
+import { TabComponent } from './components/tabs/components/tab/tab.component';
 
 @Component({
   selector: 'app-root',
@@ -11,20 +12,26 @@ export class AppComponent {
   @ViewChild(TabsFullComponent) tabsFullComponent: TabsFullComponent;
   @ViewChild('newTab') newTabTemplate: any;
 
-  numero = 5;
+  constructor(private cdr: ChangeDetectorRef){}
 
-  onNewTab() {
-    this.tabsFullComponent?.newTab(
-      `Tab ${this.numero}`,
-      this.newTabTemplate,
-      //{},
-      this.numero,
-      true
-    );
-    this.numero++;
+  /**
+   * @description
+   * Method que se encarga de crear una nueva pestaña
+   * @param tabConfig - Configuración de la pestaña
+   * @param template - Template de la pestaña
+   * @param data - Data de la pestaña
+   */
+  protected onNewTab(
+  ): void {
+    const tabConfig = {
+      tabTitle: 'Tab',
+      isCloseable: true,
+    };
+    this.tabsFullComponent?.newTab(tabConfig, this.newTabTemplate, null);
+    this.cdr.detectChanges();
   }
 
-  onCloseTab() {
+  onCloseTab(_tab: TabComponent = null) {
     // close the tab
     this.tabsFullComponent?.closeActiveTab();
   }

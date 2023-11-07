@@ -1,19 +1,19 @@
 <app-tabs-full
   (tabSelectedEvent)="tabSelected($event)"
-  (closeTabButtonEvent)="onCloseTabSelected($event)"
+  (closeTabButtonEvent)="onCloseTab($event)"
   (addTabButtonEvent)="onNewTab()"
   [isScrollable]="true"
   [tabIndicator]="false"
   [tabIndicatorPosition]="'top'"
-  [closeWithDoubleClick]="false"
-  (closeTabWithDoubleClickEvent)="onCloseTabSelectedWithDoubleClick($event)"
   [isNameEditable]="true"
+  [hasCloseableEmit]="true"
+  [allCloseable]="true"
   (tabNameChangedEvent)="proof($event)"
 >
   <app-tab tabTitle="Tab 1" [isCloseable]="true">
     <mat-card style="height: 300px">Content of tab 1</mat-card>
   </app-tab>
-  <app-tab tabTitle="Tab 2" [isCloseable]="true">
+  <app-tab tabTitle="Tab 2" [isCloseable]="true" [inError]="true">
     <mat-card style="height: 300px">Content of tab 2</mat-card></app-tab
   >
   <app-tab tabTitle="Tab 3" [isCloseable]="true">

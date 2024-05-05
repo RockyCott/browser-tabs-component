@@ -1,11 +1,11 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appScrollable]',
-  exportAs: 'appScrollable',
+  selector: '[scrollableContainer]',
+  exportAs: 'scrollableContainer',
   standalone: true,
 })
-export class ScrollableDirective {
+export class ScrollableContainerDirective {
   @Input() public scrollUnit: number = 200;
   @Input() public scrollDuration: number = 300;
   constructor(private elementRef: ElementRef) {}

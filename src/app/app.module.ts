@@ -7,6 +7,7 @@ import { TabsFullModule } from './components/tabs/tabs-full.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import { ExampleComponent } from './example/example.component';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -16,6 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
     BrowserAnimationsModule,
     MatCardModule,
     MatButtonModule,
+    ExampleComponent,
   ],
   bootstrap: [AppComponent],
 })

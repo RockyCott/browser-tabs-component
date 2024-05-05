@@ -4,7 +4,7 @@ describe('TabsFullComponent', () => {
   let component: TabsFullComponent;
 
   beforeEach(() => {
-    component = new TabsFullComponent(null, null);
+    component = new TabsFullComponent(null, null, null);
   });
 
   it('should create', () => {

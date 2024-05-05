@@ -1,0 +1,36 @@
+<section class="gris-background">
+  <app-tabs-full
+    (tabSelected)="tabSelected($event)"
+    (closeTabButton)="closeTabSelected($event)"
+    (addTabButtonClick)="newDynamicTab()"
+    [tabIndicator]="true"
+    [tabIndicatorPosition]="'top'"
+    [isNameEditable]="true"
+    [hasCloseableEmit]="true"
+    [allCloseable]="true"
+  >
+    <app-tab
+      [tabTitle]="tab.title"
+      [closeable]="true"
+      [code]="tab.code"
+      *ngFor="let tab of staticTabs"
+    >
+      <ng-container
+        *ngIf="tab.template; else projectedContent"
+        [ngTemplateOutlet]="tab.template"
+        [ngTemplateOutletContext]="{ data: tab.data }"
+      ></ng-container>
+      <ng-template #projectedContent>
+        <app-test [(testTitle)]="tab.title" [componentCode]="tab.code">
+          <mat-card style="height: 300px"
+            ><input type="text" /></mat-card></app-test
+      ></ng-template>
+    </app-tab>
+  </app-tabs-full>
+</section>
+
+<ng-template #newTab let-data="data">
+  <app-test [(testTitle)]="data.tabTitle" [componentCode]="data.code">
+    <mat-card style="height: 300px"
+      ><input type="text" /></mat-card></app-test
+></ng-template>

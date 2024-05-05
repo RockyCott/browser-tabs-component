@@ -1,0 +1,52 @@
+<mat-card>
+  <mat-card-content>
+    <h2>Custom Component For {{ testTitle }}</h2>
+    <div class="container">
+      <form>
+        <div class="row">
+          <div class="col-25">
+            <label for="tabTitle">Tab Title</label>
+          </div>
+          <div class="col-75">
+            <input
+              type="text"
+              id="tabTitle"
+              name="tabTitle"
+              placeholder="Your tab.."
+              [(ngModel)]="testTitle"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="country">Country</label>
+          </div>
+          <div class="col-75">
+            <select id="country" name="country">
+              <option value="australia">Australia</option>
+              <option value="canada">Canada</option>
+              <option value="usa">USA</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-25">
+            <label for="subject">Subject</label>
+          </div>
+          <div class="col-75">
+            <textarea
+              id="subject"
+              name="subject"
+              placeholder="Write something.."
+              style="height: 200px"
+            ></textarea>
+          </div>
+        </div>
+        <br />
+        <div class="row">
+          <input type="submit" value="Submit" />
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

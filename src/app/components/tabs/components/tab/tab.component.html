@@ -1,9 +1,9 @@
-<div [hidden]="!active" class="pane">
+<ng-container
+  *ngIf="tabContentDirective || template; else projectedContent"
+  [ngTemplateOutlet]="tabContentDirective?.templateRef || template"
+  [ngTemplateOutletContext]="{ data: dataContext }"
+></ng-container>
+
+<ng-template #projectedContent>
   <ng-content></ng-content>
-  <ng-container
-    *ngIf="template"
-    [ngTemplateOutlet]="template"
-    [ngTemplateOutletContext]="{ data: dataContext }"
-  >
-  </ng-container>
-</div>
+</ng-template>
